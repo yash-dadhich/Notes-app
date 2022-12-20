@@ -48,20 +48,23 @@ class MainActivity : AppCompatActivity() {
         }
 
         chipView.setOnCheckedChangeListener { _, isChecked ->
-            chipView.animate().rotation(360f).setDuration(1000).start()
-            Handler(Looper.getMainLooper()).postDelayed({
-                if (isChecked) {
+            if (isChecked) {
+                chipView.animate().rotation(360f).setDuration(1000).start()
+                Handler(Looper.getMainLooper()).postDelayed({
                     chipView.text = "grid"
                     chipView.setChipIconResource(R.drawable.ic_round_grid_on_24)
-                    recyclerView.layoutManager =StaggeredGridLayoutManager(2, LinearLayoutManager.VERTICAL)
-                }
-                else{
+                    recyclerView.layoutManager =
+                        StaggeredGridLayoutManager(2, LinearLayoutManager.VERTICAL)
+                }, 500)
+            } else {
+                chipView.animate().rotation(360f).setDuration(1000).start()
+                Handler(Looper.getMainLooper()).postDelayed({
                     chipView.text = "list"
-                    chipView.setChipIconResource(R.drawable.ic_list)
-                    recyclerView.layoutManager =StaggeredGridLayoutManager(1, LinearLayoutManager.VERTICAL)
-                }
-
-            }, 500)
+                    chipView.setChipIconResource(R.drawable.ic_round_grid_on_24)
+                    recyclerView.layoutManager =
+                        StaggeredGridLayoutManager(2, LinearLayoutManager.VERTICAL)
+                }, 500)
+            }
         }
 
         nightModeSwitch.setOnCheckedChangeListener { _, isChecked ->

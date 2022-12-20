@@ -6,27 +6,64 @@
     tools:context=".view.NoteAddActivity"
     android:orientation="vertical"
     android:padding="12dp">
-    
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/imgBack"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:src="@drawable/ic_back"
+            android:layout_centerVertical="true"
+            android:padding="8dp"/>
+
+        <TextView
+            android:id="@+id/textOk"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="8dp"
+            android:text="OK"
+            android:textStyle="bold"
+            style="@style/itemTextColor"
+            android:layout_alignParentEnd="true"
+            android:textSize="18sp"/>
+
+
+    </RelativeLayout>
+
     <EditText
+        android:id="@+id/editTextTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textSize="24sp"
         android:hint="Title"
         android:paddingVertical="8dp"
+        android:textStyle="bold"
         android:background="@android:color/transparent"
-        android:fontFamily="@font/caveat_variable_font_wght"/>
+        android:fontFamily="@font/caveat_variable_font_wght" />
 
     <EditText
-        android:id="@+id/editTextTextMultiLine"
+        android:id="@+id/editTextDesc"
         android:layout_width="match_parent"
         android:background="@android:color/transparent"
         android:paddingVertical="8dp"
-        android:layout_height="match_parent"
+        android:layout_height="400dp"
         android:ems="10"
         android:hint="your note here"
         android:textSize="20sp"
         android:fontFamily="@font/caveat_variable_font_wght"
         android:gravity="start|top"
         android:inputType="textMultiLine" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="bold"
+        android:textColor="@color/white"
+        android:id="@+id/buttonBold"/>
+
 
 </LinearLayout>
