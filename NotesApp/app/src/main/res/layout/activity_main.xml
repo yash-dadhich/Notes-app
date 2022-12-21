@@ -19,11 +19,47 @@
             android:layout_marginVertical="16sp"
             android:layout_marginStart="16sp"
             android:text="Notes"
-            android:textSize="28sp" />
+            android:fontFamily="@font/caveat_variable_font_wght"
+            android:textStyle="bold"
+            android:textSize="40sp" />
+
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/chipView"
+            android:layout_width="70dp"
+            android:layout_height="32dp"
+            app:cardCornerRadius="15dp"
+            android:layout_toStartOf="@id/customSwitch"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="16dp"
+            android:paddingHorizontal="4dp"
+            android:backgroundTint="@color/blue">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center">
+
+                <ImageView
+                    android:id="@+id/viewTypeImage"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_list"/>
+                <TextView
+                    android:id="@+id/viewTypeText"
+                    android:layout_marginStart="6dp"
+                    android:layout_width="wrap_content"
+                    android:textSize="18sp"
+                    android:fontFamily="@font/caveat_variable_font_wght"
+                    android:textStyle="bold"
+                    android:layout_height="wrap_content"
+                    android:text="List"/>
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
 
 
         <com.google.android.material.chip.Chip
-            android:id="@+id/chipView"
+            android:visibility="gone"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"

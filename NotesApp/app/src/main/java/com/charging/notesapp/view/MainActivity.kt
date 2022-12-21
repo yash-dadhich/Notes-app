@@ -5,6 +5,8 @@ import android.content.res.Configuration
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.widget.ImageView
+import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.ActivityResultCallback
 import androidx.activity.result.ActivityResultLauncher
@@ -12,6 +14,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.widget.SwitchCompat
+import androidx.cardview.widget.CardView
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -37,7 +40,9 @@ class MainActivity : AppCompatActivity() {
 
         val fab:FloatingActionButton = findViewById(R.id.fab)
         val nightModeSwitch: SwitchCompat = findViewById(R.id.customSwitch)
-        val chipView:Chip = findViewById(R.id.chipView)
+        val chipView:CardView = findViewById(R.id.chipView)
+        val viewTypeImage:ImageView = findViewById(R.id.viewTypeImage)
+        val viewTypeText:TextView = findViewById(R.id.viewTypeText)
         val recyclerView: RecyclerView = findViewById(R.id.notesRecycler)
 
         if (NoteApplication.isFirstTime){
@@ -54,23 +59,28 @@ class MainActivity : AppCompatActivity() {
             NoteApplication.isFirstTime = false
         }
 
-        chipView.setOnCheckedChangeListener { _, isChecked ->
-            if (isChecked) {
+        var count = 0
+        chipView.setOnClickListener {
+
+            if (count == 0) {
                 chipView.animate().rotation(360f).setDuration(1000).start()
                 Handler(Looper.getMainLooper()).postDelayed({
-                    chipView.text = "grid"
-                    chipView.setChipIconResource(R.drawable.ic_round_grid_on_24)
+                    viewTypeImage.setImageResource(R.drawable.ic_round_grid_on_24)
+                    viewTypeText.text = "Grid"
                     recyclerView.layoutManager =
                         StaggeredGridLayoutManager(2, LinearLayoutManager.VERTICAL)
                 }, 500)
-            } else {
-                chipView.animate().rotation(360f).setDuration(1000).start()
+                count++
+            }
+            else{
+                chipView.animate().rotation(0f).setDuration(1000).start()
                 Handler(Looper.getMainLooper()).postDelayed({
-                    chipView.text = "list"
-                    chipView.setChipIconResource(R.drawable.ic_round_grid_on_24)
+                    viewTypeImage.setImageResource(R.drawable.ic_list)
+                    viewTypeText.text = "List"
                     recyclerView.layoutManager =
-                        StaggeredGridLayoutManager(2, LinearLayoutManager.VERTICAL)
+                        StaggeredGridLayoutManager(1, LinearLayoutManager.VERTICAL)
                 }, 500)
+                count--
             }
         }
 
@@ -136,7 +146,6 @@ class MainActivity : AppCompatActivity() {
                     val note = Note(noteTitle,noteDesc)
                     noteViewModel.insert(note)
                 }
-
             })
      }
 }
