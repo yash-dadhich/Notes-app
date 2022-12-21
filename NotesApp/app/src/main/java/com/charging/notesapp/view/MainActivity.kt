@@ -5,16 +5,22 @@ import android.content.res.Configuration
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.widget.Toast
+import androidx.activity.result.ActivityResultCallback
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.widget.SwitchCompat
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.charging.notesapp.NoteApplication
 import com.charging.notesapp.R
 import com.charging.notesapp.adapter.NoteAdapter
+import com.charging.notesapp.model.Note
 import com.charging.notesapp.viewmodel.NoteViewModel
 import com.charging.notesapp.viewmodel.NoteViewModelFactory
 import com.google.android.material.chip.Chip
@@ -23,6 +29,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 class MainActivity : AppCompatActivity() {
 
     lateinit var noteViewModel: NoteViewModel
+    lateinit var addActivityResultLauncher : ActivityResultLauncher<Intent>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -82,6 +89,9 @@ class MainActivity : AppCompatActivity() {
         val noteAdapter = NoteAdapter()
         recyclerView.adapter = noteAdapter
 
+        // register activity for result
+        registerActivityResultLauncher()
+
         val viewModelFactory = NoteViewModelFactory((application as NoteApplication).repository)
 
         noteViewModel = ViewModelProvider(this, viewModelFactory)[NoteViewModel::class.java]
@@ -90,9 +100,43 @@ class MainActivity : AppCompatActivity() {
             noteAdapter.setNote(notes)
         }
 
+        ItemTouchHelper(object : ItemTouchHelper.SimpleCallback(0,ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) {
+            override fun onMove(
+                recyclerView: RecyclerView,
+                viewHolder: RecyclerView.ViewHolder,
+                target: RecyclerView.ViewHolder
+            ): Boolean {
+                TODO("Not yet implemented")
+            }
+
+            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+//                viewHolder.adapterPosition
+                noteViewModel.delete(noteAdapter.getNote(viewHolder.adapterPosition))
+                Toast.makeText(this@MainActivity, "Note Deleted", Toast.LENGTH_SHORT).show()
+            }
+
+        }).attachToRecyclerView(recyclerView)
+
         fab.setOnClickListener {
             val intent = Intent(this@MainActivity,NoteAddActivity::class.java)
-            startActivity(intent)
+            addActivityResultLauncher.launch(intent)
         }
     }
+
+     private fun registerActivityResultLauncher(){
+        addActivityResultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult(),
+            ActivityResultCallback { resultAddNode ->
+                val resultCode = resultAddNode.resultCode
+                val data = resultAddNode.data
+
+                if (resultCode == RESULT_OK && data != null){
+                    val noteTitle:String = data.getStringExtra("title").toString()
+                    val noteDesc:String = data.getStringExtra("desc").toString()
+
+                    val note = Note(noteTitle,noteDesc)
+                    noteViewModel.insert(note)
+                }
+
+            })
+     }
 }

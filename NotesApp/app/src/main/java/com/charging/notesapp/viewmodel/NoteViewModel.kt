@@ -1,6 +1,5 @@
 package com.charging.notesapp.viewmodel
 
-import android.view.View
 import androidx.lifecycle.*
 import com.charging.notesapp.model.Note
 import com.charging.notesapp.repository.NoteRepository

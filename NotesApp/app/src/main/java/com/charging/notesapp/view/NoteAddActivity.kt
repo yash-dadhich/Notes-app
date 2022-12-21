@@ -1,15 +1,15 @@
 package com.charging.notesapp.view
 
-import android.media.Image
-import androidx.appcompat.app.AppCompatActivity
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
-import android.view.View
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
 import com.charging.notesapp.R
+
 
 class NoteAddActivity : AppCompatActivity() {
 
@@ -18,7 +18,6 @@ class NoteAddActivity : AppCompatActivity() {
     lateinit var textTitle:EditText
     lateinit var textDesc:EditText
     lateinit var buttonBold: Button
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,60 +33,28 @@ class NoteAddActivity : AppCompatActivity() {
             finish()
         }
 
-
-        var start = textDesc.selectionStart
-        var end = textDesc.selectionEnd
-
-        val selectedText = textDesc.text.substring(start,end)
-        Log.d("text123", selectedText)
-
         textOk.setOnClickListener {
-            var start = textDesc.selectionStart
-            var end = textDesc.selectionEnd
-
-            val selectedText = textDesc.text.substring(start,end)
-            Log.d("text123", selectedText)
+            saveNote()
         }
-
-        textDesc.addOnAttachStateChangeListener(object: View.OnAttachStateChangeListener{
-            override fun onViewAttachedToWindow(v: View?) {
-                Log.d("text123", selectedText)
-            }
-
-            override fun onViewDetachedFromWindow(v: View?) {
-                Log.d("text123", selectedText)
-            }
-
-        })
 
         buttonBold.setOnClickListener {
             var start = textDesc.selectionStart
             var end = textDesc.selectionEnd
 
-            val selectedText = textDesc.text.substring(start,end)
+            val selectedText = textDesc.text.substring(start, end)
             Log.d("text123", selectedText)
-
-            
         }
-
-        textDesc.addOnLayoutChangeListener { v, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom ->
-
-            Log.d("text123", selectedText)
-
-        }
-
-
-
     }
 
-    override fun onResume() {
-        super.onResume()
+    private fun saveNote() {
+        val noteTitle = textTitle.text.toString()
+        val noteDesc = textDesc.text.toString()
 
-        var start = textDesc.selectionStart
-        var end = textDesc.selectionEnd
+        val intent = Intent()
+        intent.putExtra("title", noteTitle)
+        intent.putExtra("desc", noteDesc)
+        setResult(RESULT_OK, intent)
+        finish()
 
-        val selectedText = textDesc.text.substring(start,end)
-        Log.d("text123", selectedText)
     }
-
 }
