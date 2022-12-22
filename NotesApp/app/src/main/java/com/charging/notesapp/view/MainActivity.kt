@@ -26,8 +26,8 @@ import com.charging.notesapp.adapter.NoteAdapter
 import com.charging.notesapp.model.Note
 import com.charging.notesapp.viewmodel.NoteViewModel
 import com.charging.notesapp.viewmodel.NoteViewModelFactory
-import com.google.android.material.chip.Chip
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.orhanobut.hawk.Hawk
 
 class MainActivity : AppCompatActivity() {
 
@@ -59,10 +59,8 @@ class MainActivity : AppCompatActivity() {
             NoteApplication.isFirstTime = false
         }
 
-        var count = 0
         chipView.setOnClickListener {
-
-            if (count == 0) {
+            if (Hawk.get<String>("viewType")=="list") {
                 chipView.animate().rotation(360f).setDuration(1000).start()
                 Handler(Looper.getMainLooper()).postDelayed({
                     viewTypeImage.setImageResource(R.drawable.ic_round_grid_on_24)
@@ -70,17 +68,17 @@ class MainActivity : AppCompatActivity() {
                     recyclerView.layoutManager =
                         StaggeredGridLayoutManager(2, LinearLayoutManager.VERTICAL)
                 }, 500)
-                count++
+                Hawk.put("viewType","grid")
             }
             else{
-                chipView.animate().rotation(0f).setDuration(1000).start()
+                chipView.animate().rotation(-360f).setDuration(1000).start()
                 Handler(Looper.getMainLooper()).postDelayed({
                     viewTypeImage.setImageResource(R.drawable.ic_list)
                     viewTypeText.text = "List"
                     recyclerView.layoutManager =
                         StaggeredGridLayoutManager(1, LinearLayoutManager.VERTICAL)
                 }, 500)
-                count--
+                Hawk.put("viewType","list")
             }
         }
 
@@ -94,8 +92,15 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        recyclerView.layoutManager = StaggeredGridLayoutManager(1, LinearLayoutManager.VERTICAL)
-
+        if(Hawk.get<String>("viewType")=="list") {
+            recyclerView.layoutManager = StaggeredGridLayoutManager(1, LinearLayoutManager.VERTICAL)
+            viewTypeImage.setImageResource(R.drawable.ic_list)
+            viewTypeText.text = "List"
+        } else{
+            recyclerView.layoutManager = StaggeredGridLayoutManager(2, LinearLayoutManager.VERTICAL)
+            viewTypeImage.setImageResource(R.drawable.ic_round_grid_on_24)
+            viewTypeText.text = "Grid"
+        }
         val noteAdapter = NoteAdapter()
         recyclerView.adapter = noteAdapter
 
